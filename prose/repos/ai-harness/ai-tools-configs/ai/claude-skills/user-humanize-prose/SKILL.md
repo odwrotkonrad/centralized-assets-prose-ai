@@ -1,0 +1,43 @@
+---
+name: user-humanize-prose
+description: Rewrite AI-written prose shorter, terser, more abrupt, human, idiomatic. Use when the user wants prose tightened, humanized, or de-AI-flavored, in chat replies, docs, commit text, MR descriptions, README sections, code comments. Keywords: humanize, tersify, shorten, tighten, abrupt, de-AI, idiomatic, natural, /user-humanize-prose.
+argument-hint: "[session|selection|uncommited-changes|diff-from-main|all-repo-prose]"
+arguments: [scope]
+allowed-tools: "Bash(${CLAUDE_SKILL_DIR}/scripts/*)"
+---
+
+# Humanize Prose
+
+## Target
+
+Scope: `$scope` (empty → `diff-from-main`). Resolved target files:
+
+!`${CLAUDE_SKILL_DIR}/scripts/resolve-scope.sh $scope`
+
+`session`: rewrite prose you wrote this session (the last response, or the file the user points at). `selection`: rewrite the selected text (IDE selection in context, or text pasted with the command). From a file: edit that file in place, the selection only. Any other scope: rewrite the prose files listed above and the comments in code files, skipping content-unchanged renames.
+
+In code files, touch comments only, every kind (inline, block, doc, config annotations). Delete comments that restate the code or add nothing. Preserve notation: label prefixes (`[where]`, `[why]`, `[what]`), `[>]`/`[<]` section markers, 🤖 marks.
+
+Rewrite each target in place, same medium.
+
+## Instructions
+
+Rewrite aggressively. Never keep wording, sentence order, or structure out of caution: if a sentence can be tighter, rewrite it. "Already decent" is no reason to skip. Apply all of:
+
+- Shorten. Cut filler, hedges, preamble, postamble, restated context. Keep only what changes what the reader does or knows.
+- Deduplicate. Say each point once, in the best spot.
+- Cut the obvious. Drop what the reader knows or infers from context or competence in the field.
+- Tersify. Fewest words per sentence. No qualifiers ("quite", "essentially", "it's worth noting"). One idea per sentence.
+- Abrupt. Start with the point. No warm-ups, transitions, recaps.
+- Humanize. Kill AI tells: "delve", "leverage", "robust", "seamless", "comprehensive", "it's important to", bullet-mania, mirrored triads, em-dash chains, over-parallel structure. Vary sentence length. Write like a practitioner in a hurry, not a brochure.
+- Idiomatic. The field's standard terms, what a working engineer, ops person, or writer would say. Common name over invented paraphrase.
+
+## Constraints
+
+Preserve facts, code, commands, paths, numbers, meaning. Never trade correctness for brevity.
+
+Output only the rewritten prose. No commentary unless asked.
+
+## Inconsistencies
+
+Hit an inconsistency (inaccurate, contradictory, out of sync with the repo): tell the user, let them decide. Non-interactive session: resolve it with best judgment, keep the repo coherent, report what and why.
