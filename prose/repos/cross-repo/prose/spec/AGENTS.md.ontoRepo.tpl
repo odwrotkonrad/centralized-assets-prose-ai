@@ -1,10 +1,8 @@
 # prose/spec
 
-Conventions and behavior specs every workspace repo obeys.
+Project boards: todo, in progress, implemented.
 
 @assets/docs-agents/purpose.md
-
-@conventions/conventions.md
 
 @assets/data/makefile.agents.md
 
